@@ -1,0 +1,8 @@
+apiVersion: v2
+dependencies:
+- name: vshnpostgresql
+  repository: https://charts.appcat.ch
+  version: 0.8.1
+name: test
+type: application
+version: 0.0.1

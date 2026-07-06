@@ -1,0 +1,3 @@
+backup:
+  # backup retention in days
+  retention: 6

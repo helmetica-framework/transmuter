@@ -24,8 +24,17 @@ go run . transmute \
   --prima-materia-version 0.8.0
 ```
 
+Validate an existing reagent (and check its CRD for breaking changes against the latest published version):
+
+```bash
+go run . validate \
+  --path . \
+  --published-url oci://ghcr.io/helmetica-framework/myreagent
+```
+
 Every flag can also be provided as an environment variable with the `TRANSMUTER_` prefix, e.g. `TRANSMUTER_FERMENT_URL`.
 
 ## Libraries
 
 * [transmute](https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/transmute) - Transmute a prima materia into a reagent.
+* [validate](https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/validate) - Validate a reagent and detect breaking CRD changes.
