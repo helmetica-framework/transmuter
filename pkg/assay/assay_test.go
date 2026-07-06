@@ -1,4 +1,4 @@
-package validate
+package assay
 
 import (
 	"os"
@@ -29,7 +29,7 @@ type: application
 version: 0.1.0
 `
 
-func TestValidate(t *testing.T) {
+func TestAssay(t *testing.T) {
 	tests := []struct {
 		name        string
 		path        func(t *testing.T) string
@@ -72,7 +72,7 @@ func TestValidate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := Validate(tt.path(t), "")
+			err := Assay(tt.path(t), "")
 			if tt.wantErr {
 				require.Error(t, err)
 				if tt.errContains != "" {
