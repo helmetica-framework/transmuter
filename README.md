@@ -1,6 +1,9 @@
 # Transmuter
 
-Transmutes a prima materia into a valid reagent.
+**Transmute**: change from one substance into another.
+
+The transmuter bootstraps a service helmchart for the Helmetica framework.
+Once bootstrapped the service maintainer can adjust the pre-configured libraries to their liking.
 
 ## Glossary
 
