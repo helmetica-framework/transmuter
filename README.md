@@ -2,4 +2,27 @@
 
 Transmutes a prima materia into a valid reagent.
 
-go run . test oci://ghcr.io/helmetica-framework/ferment:0.0.1 https://charts.appcat.ch/vshnpostgresql 0.8.0
+## Glossary
+
+| Term | Meaning |
+| ---- | ------- |
+| **Prima materia** | The raw upstream Helm chart (repository URL + version) that serves as the starting point of a transmutation. It ends up as a dependency of the reagent. |
+| **Ferment** | The base chart (e.g. `oci://ghcr.io/helmetica-framework/ferment`) used as the scaffold from which the reagent is created. |
+| **Azoth** | A library chart providing shared templates and helpers to reagents. |
+| **Reagent** | The result of a transmutation: a valid service chart that wraps the prima materia and is ready for further development. |
+
+## Quickstart
+
+```bash
+go run . transmute \
+  --name test \
+  --ferment-url oci://ghcr.io/helmetica-framework/ferment:0.0.1 \
+  --prima-materia-url https://charts.appcat.ch/vshnpostgresql \
+  --prima-materia-version 0.8.0
+```
+
+Every flag can also be provided as an environment variable with the `TRANSMUTER_` prefix, e.g. `TRANSMUTER_FERMENT_URL`.
+
+## Libraries
+
+* [transmute](https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/transmute) - Transmute a prima materia into a reagent.
