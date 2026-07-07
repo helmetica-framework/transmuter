@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestValidateCommandRegistered(t *testing.T) {
-	var validateCmd *cobra.Command
+func TestAssayCommandRegistered(t *testing.T) {
+	var assayCmd *cobra.Command
 	for _, c := range RootCmd.Commands() {
-		if c.Name() == "validate" {
-			validateCmd = c
+		if c.Name() == "assay" {
+			assayCmd = c
 			break
 		}
 	}
-	require.NotNil(t, validateCmd, "validate command not registered on RootCmd")
+	require.NotNil(t, assayCmd, "assay command not registered on RootCmd")
 
-	pathFlag := validateCmd.Flags().Lookup("path")
+	pathFlag := assayCmd.Flags().Lookup("path")
 	require.NotNil(t, pathFlag, "--path flag missing")
 	assert.Equal(t, ".", pathFlag.DefValue)
 
-	publishedFlag := validateCmd.Flags().Lookup("published-url")
+	publishedFlag := assayCmd.Flags().Lookup("published-url")
 	require.NotNil(t, publishedFlag, "--published-url flag missing")
 	assert.Equal(t, "", publishedFlag.DefValue)
 }

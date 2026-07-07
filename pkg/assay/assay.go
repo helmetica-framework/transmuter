@@ -1,6 +1,6 @@
-// Package validate checks that a reagent chart is valid and that its
+// Package assay checks that a reagent chart is valid and that its
 // generated CRD does not break the previously published version.
-package validate
+package assay
 
 import (
 	"bytes"
@@ -20,11 +20,11 @@ import (
 
 var errNoVersions = errors.New("no semver tags found")
 
-// Validate checks the reagent chart at path: loadable, metadata valid,
+// Assay checks the reagent chart at path: loadable, metadata valid,
 // version strict semver, values.yaml CRD-generatable. With publishedURL set,
 // it also compares the generated CRD against the latest published reagent
 // and errors on breaking changes.
-func Validate(path, publishedURL string) error {
+func Assay(path, publishedURL string) error {
 	slog.Info("assaying reagent", "path", path)
 
 	chrt, err := loadChart(path)
