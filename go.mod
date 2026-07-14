@@ -4,7 +4,7 @@ go 1.26.4
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
-	github.com/helmetica-framework/chrysopoeia v0.0.0-20260713191331-4ac3a6dc8e98
+	github.com/helmetica-framework/chrysopoeia v0.0.0-20260714202246-24c7cbd6f991
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.11.1
