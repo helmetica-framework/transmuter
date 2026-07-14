@@ -1,0 +1,16 @@
+apiVersion: rituals.helmetica.io/v1
+kind: Definition
+metadata:
+  name: %s
+spec:
+  description: TODO describe what this ritual does
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: %s
+              image: TODO
+              command: []
+              args: []
+          restartPolicy: Never
