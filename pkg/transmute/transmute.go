@@ -117,6 +117,7 @@ func primaMateriaFromURL(rawURL, version string) (*chart.Dependency, error) {
 		Name:       trimmed[i+1:],
 		Version:    version,
 		Repository: trimmed[:i],
+		Alias:      "service",
 	}
 	return dep, dep.Validate()
 }
