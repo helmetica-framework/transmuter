@@ -100,8 +100,8 @@ github.com/hashicorp/golang-lru/arc/v2 v2.0.5 h1:l2zaLDubNhW4XO3LnliVj0GXO3+/CGN
 github.com/hashicorp/golang-lru/arc/v2 v2.0.5/go.mod h1:ny6zBSQZi2JxIeYcv7kt2sH2PXJtirBN7RDhRpxPkxU=
 github.com/hashicorp/golang-lru/v2 v2.0.5 h1:wW7h1TG88eUIJ2i69gaE3uNVtEPIagzhGvHgwfx2Vm4=
 github.com/hashicorp/golang-lru/v2 v2.0.5/go.mod h1:QeFd9opnmA6QUJc5vARoKUSoFhyfM2/ZepoAG6RGpeM=
-github.com/helmetica-framework/chrysopoeia v0.0.0-20260713191331-4ac3a6dc8e98 h1:yTaS7Giv+dl4X1oLQZ042+utCp91fPMH33hKm+PgwT4=
-github.com/helmetica-framework/chrysopoeia v0.0.0-20260713191331-4ac3a6dc8e98/go.mod h1:qD5ym5+KFP0c5sHLDBnyI6PRXFxa+S2udvpHvaXFEo8=
+github.com/helmetica-framework/chrysopoeia v0.0.0-20260714202246-24c7cbd6f991 h1:Ax5sfS6TxLh6yxwOF5OdeT3xH1ZX5KVoSWnTURHnm5Q=
+github.com/helmetica-framework/chrysopoeia v0.0.0-20260714202246-24c7cbd6f991/go.mod h1:UKsIyWT3re2TsVginC8A5Sg3nNIgFy9Y3To4x6czViY=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
