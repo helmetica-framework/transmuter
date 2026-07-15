@@ -21,10 +21,12 @@ Once bootstrapped the service maintainer can adjust the pre-configured libraries
 ```bash
 go run . transmute \
   --name test \
-  --ferment-url oci://ghcr.io/helmetica-framework/ferment:0.0.1 \
   --prima-materia-url https://charts.appcat.ch/vshnpostgresql \
   --prima-materia-version 0.8.0
 ```
+
+`--ferment-url` is optional and defaults to `oci://ghcr.io/helmetica-framework/ferment`.
+A ferment URL without a tag resolves to the latest available version.
 
 Assay an existing reagent (validate it and check its CRD for breaking changes against the latest published version):
 

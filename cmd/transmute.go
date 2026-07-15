@@ -7,9 +7,11 @@ import (
 	"github.com/helmetica-framework/transmuter/pkg/transmute"
 )
 
+const defaultFermentURL = "oci://ghcr.io/helmetica-framework/ferment"
+
 func init() {
 	transmuteCmd.Flags().String("name", "", "name of the resulting reagent")
-	transmuteCmd.Flags().String("ferment-url", "", "URL of the ferment to use as scaffold (e.g. oci://ghcr.io/helmetica-framework/ferment:0.0.1)")
+	transmuteCmd.Flags().String("ferment-url", defaultFermentURL, "URL of the ferment to use as scaffold; without a tag the latest available version is used")
 	transmuteCmd.Flags().String("prima-materia-url", "", "repository URL of the prima materia chart")
 	transmuteCmd.Flags().String("prima-materia-version", "", "version of the prima materia chart")
 
@@ -25,7 +27,7 @@ var transmuteCmd = &cobra.Command{
 }
 
 func runTransmute(cmd *cobra.Command, _ []string) error {
-	err := requiredParams([]string{"name", "ferment-url", "prima-materia-url", "prima-materia-version"}, cmd)
+	err := requiredParams([]string{"name", "prima-materia-url", "prima-materia-version"}, cmd)
 	if err != nil {
 		return err
 	}
