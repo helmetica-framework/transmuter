@@ -76,6 +76,11 @@ func downloadChart(chartRef string) (string, error) {
 		return "", err
 	}
 
+	chartRef, err = resolveChartRef(chartRef, c.Tags)
+	if err != nil {
+		return "", err
+	}
+
 	res, err := c.Pull(
 		chartRef,
 		registry.PullOptWithChart(true),
@@ -110,4 +115,25 @@ func primaMateriaFromURL(rawURL, version string) (*chart.Dependency, error) {
 		Repository: trimmed[:i],
 	}
 	return dep, dep.Validate()
+}
+
+// resolveChartRef appends the latest available tag when ref has none.
+// A tag is a ":" after the last "/" (hosts may carry a port).
+func resolveChartRef(ref string, listTags func(string) ([]string, error)) (string, error) {
+	index := strings.LastIndex(ref, "/")
+
+	if strings.Contains(ref[index:], ":") {
+		return ref, nil
+	}
+
+	tags, err := listTags(ref)
+	if err != nil {
+		return "", fmt.Errorf("listing tags for %s: %w", ref, err)
+	}
+
+	if len(tags) == 0 {
+		return "", fmt.Errorf("no tags found for %s", ref)
+	}
+
+	return ref + ":" + tags[0], nil
 }
