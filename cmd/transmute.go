@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -24,23 +21,13 @@ var transmuteCmd = &cobra.Command{
 	Short: "Transmutes a prima materia into a valid reagent",
 	Long:  "Transmutes a prima materia into a valid reagent. Flags can also be set via environment variables (e.g. TRANSMUTER_FERMENT_URL).",
 	Args:  cobra.NoArgs,
-	PreRunE: func(cmd *cobra.Command, _ []string) error {
-		viper.SetEnvPrefix("transmuter")
-		viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
-		viper.AutomaticEnv()
-		return viper.BindPFlags(cmd.Flags())
-	},
-	RunE: runTransmute,
+	RunE:  runTransmute,
 }
 
 func runTransmute(cmd *cobra.Command, _ []string) error {
-	// required flags are checked here instead of via MarkFlagRequired so
-	// values provided through environment variables count as set
-	for _, key := range []string{"name", "ferment-url", "prima-materia-url", "prima-materia-version"} {
-		if viper.GetString(key) == "" {
-			cmd.SilenceUsage = false
-			return fmt.Errorf("required flag --%s (or env %s) not set", key, "TRANSMUTER_"+strings.ToUpper(strings.ReplaceAll(key, "-", "_")))
-		}
+	err := requiredParams([]string{"name", "ferment-url", "prima-materia-url", "prima-materia-version"}, cmd)
+	if err != nil {
+		return err
 	}
 
 	return transmute.Transmute(

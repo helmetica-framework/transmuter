@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"strings"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -21,13 +19,7 @@ var assayCmd = &cobra.Command{
 	Short: "Assays a reagent and checks its CRD for breaking changes",
 	Long:  "Assays a reagent and checks its generated CRD for breaking changes against the latest published version. Flags can also be set via environment variables (e.g. TRANSMUTER_PUBLISHED_URL).",
 	Args:  cobra.NoArgs,
-	PreRunE: func(cmd *cobra.Command, _ []string) error {
-		viper.SetEnvPrefix("transmuter")
-		viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
-		viper.AutomaticEnv()
-		return viper.BindPFlags(cmd.Flags())
-	},
-	RunE: runAssay,
+	RunE:  runAssay,
 }
 
 func runAssay(_ *cobra.Command, _ []string) error {

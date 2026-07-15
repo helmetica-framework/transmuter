@@ -46,6 +46,10 @@ func Assay(path, publishedURL string) error {
 		return fmt.Errorf("generating CRD from reagent: %w", err)
 	}
 
+	if err := validateRituals(chrt); err != nil {
+		return err
+	}
+
 	if publishedURL != "" {
 		if err := checkBreakage(crd, publishedURL, version.Major()); err != nil {
 			return err
