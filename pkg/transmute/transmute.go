@@ -50,6 +50,12 @@ func Transmute(name, fermentURL, primaMateriaURL, primaMateriaVersion string) er
 		return err
 	}
 
+	// the starter chart can't carry a .gitignore: helm strips dotfiles on load
+	gitignore := []byte("*.tgz\ncharts/\n")
+	if err := os.WriteFile(filepath.Join(name, ".gitignore"), gitignore, 0o644); err != nil {
+		return err
+	}
+
 	slog.Info("assaying reagent")
 	rawChart, err := loader.Load(chartDir)
 	if err != nil {
