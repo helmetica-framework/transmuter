@@ -76,7 +76,11 @@ func downloadChart(chartRef string) (string, error) {
 		return "", err
 	}
 
-	chartRef, err = resolveChartRef(chartRef, c.Tags)
+	// c.Tags, unlike c.Pull, rejects the oci:// scheme prefix
+	listTags := func(ref string) ([]string, error) {
+		return c.Tags(strings.TrimPrefix(ref, "oci://"))
+	}
+	chartRef, err = resolveChartRef(chartRef, listTags)
 	if err != nil {
 		return "", err
 	}
