@@ -14,6 +14,7 @@ Once bootstrapped the service maintainer can adjust the pre-configured libraries
 | **Azoth** | A library chart providing shared templates and helpers to reagents. |
 | **Reagent** | The result of a transmutation: a valid service chart that wraps the prima materia and is ready for further development. |
 | **Assay** | Non-destructive purity test of a reagent: chart validity plus CRD breaking-change detection against the latest published version of the same major. |
+| **Touchstone** | An end-to-end [chainsaw](https://kyverno.github.io/chainsaw/) test of a reagent against a running athanor cluster. Lives in `test/touchstone/<name>/`; the transmuter only scaffolds them, `just touchstone` runs them. |
 | **Ritual** | A packaged `Definition` manifest (`rituals.helmetica.io/v1`) in a reagent describing a single or scheduled operational action (e.g. restart, maintenance). Executed at runtime by a separate controller via `Action` CRs; the transmuter only scaffolds and assays them. |
 
 ## Quickstart
@@ -28,23 +29,33 @@ go run . transmute \
 `--ferment-url` is optional and defaults to `oci://ghcr.io/helmetica-framework/ferment`.
 A ferment URL without a tag resolves to the latest available version.
 
+`--path` is optional on every command that takes it and defaults to the current directory, so the
+commands below are meant to be run from inside the reagent.
+
 Assay an existing reagent (validate it and check its CRD for breaking changes against the latest published version):
 
 ```bash
 go run . assay \
-  --path . \
   --published-url oci://ghcr.io/helmetica-framework/myreagent
 ```
 
 Add a skeleton ritual to an existing reagent:
 
 ```bash
-go run . ritual add \
-  --path . \
-  --name restart
+go run . ritual add --name restart
 ```
 
 Assay validates every ritual `Definition` found in the rendered reagent.
+
+Add a skeleton touchstone (chainsaw test) to an existing reagent:
+
+```bash
+go run . touchstone add --name install
+```
+
+This writes a chainsaw template test to `test/touchstone/<name>/`.
+The template will have various variables pre-defined that help testing reagents.
+Take a look at the template to find out where to add assertions for the test.
 
 Every flag can also be provided as an environment variable with the `TRANSMUTER_` prefix, e.g. `TRANSMUTER_FERMENT_URL`.
 
@@ -53,3 +64,4 @@ Every flag can also be provided as an environment variable with the `TRANSMUTER_
 * [transmute](https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/transmute) - Transmute a prima materia into a reagent.
 * [assay](https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/assay) - Assay a reagent and detect breaking CRD changes.
 * [ritual](https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/ritual) - Scaffold ritual Definitions into a reagent.
+* [touchstone](https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/touchstone) - Scaffold chainsaw tests into a reagent.
