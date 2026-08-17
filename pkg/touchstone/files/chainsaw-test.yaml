@@ -4,10 +4,7 @@ metadata:
   name: TOUCHSTONE_NAME
 spec:
   description: >-
-    TODO describe what this touchstone proves. The steps below publish the chart
-    to the athanor registry, let chrysopoeia turn it into a CRD and claim an
-    instance. Everything is derived from Chart.yaml, so no edit is needed there.
-    Add the assertions this test is about to the last step.
+    TODO describe what this touchstone proves.
   steps:
     - name: publish the chart
       try:
