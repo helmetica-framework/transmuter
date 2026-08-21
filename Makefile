@@ -8,6 +8,8 @@ MAKEFLAGS += --no-builtin-variables
 .SECONDARY:
 .DEFAULT_GOAL := help
 
+export GOEXPERIMENT = jsonv2
+
 include Makefile.vars.mk
 
 .PHONY: help
