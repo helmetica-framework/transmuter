@@ -60,6 +60,25 @@ func Assay(path, publishedURL string) error {
 	return nil
 }
 
+// missingDependencies names the dependencies that are declared but not vendored into
+// charts/. A reagent renders templates that live in its library chart, so a render that
+// fails on an unvendored one reports a missing template rather than a missing chart.
+func missingDependencies(chrt *chart.Chart) []string {
+	vendored := map[string]bool{}
+	for _, dep := range chrt.Dependencies() {
+		vendored[dep.Name()] = true
+	}
+
+	var missing []string
+	for _, dep := range chrt.Metadata.Dependencies {
+		if !vendored[dep.Name] {
+			missing = append(missing, dep.Name)
+		}
+	}
+
+	return missing
+}
+
 func loadChart(path string) (*chart.Chart, error) {
 	rawChart, err := loader.Load(path)
 	if err != nil {

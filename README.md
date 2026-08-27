@@ -30,6 +30,12 @@ go run . transmute \
 `--ferment-url` is optional and defaults to `oci://ghcr.io/helmetica-framework/ferment`.
 A ferment URL without a tag resolves to the latest available version.
 
+The reagent's `Chart.yaml` is the ferment's, under the reagent's name and with the prima
+materia added to its dependencies. Whatever else the ferment declares, the azoth version
+it pins included, carries over, so the ferment stays the one place a reagent's metadata is
+decided. The reagent needs `helm dependency build` before it renders, which `just test`,
+`just build` and the touchstone all do.
+
 `--path` is optional on every command that takes it and defaults to the current directory, so the
 commands below are meant to be run from inside the reagent.
 

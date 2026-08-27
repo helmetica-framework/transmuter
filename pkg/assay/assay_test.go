@@ -108,6 +108,21 @@ func TestAssayRituals(t *testing.T) {
 				"metadata:\n  name: {{ .Values.doesnot.exist }}\n"),
 			errContains: "render",
 		},
+		{
+			// The render fails on the missing template, which says nothing about the
+			// library chart that carries it.
+			name: "template from an unvendored dependency names the fix",
+			files: map[string]string{
+				"Chart.yaml": validChartYaml + `dependencies:
+  - name: azoth
+    version: 0.1.0
+    repository: oci://ghcr.io/helmetica-framework
+`,
+				"values.yaml":          "backup:\n  retention: 6\n",
+				"templates/azoth.yaml": `{{- include "azoth.all" . }}`,
+			},
+			errContains: "helm dependency build",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

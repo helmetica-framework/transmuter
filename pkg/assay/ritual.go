@@ -40,6 +40,10 @@ func validateRituals(chrt *chart.Chart) error {
 
 	rendered, err := engine.Render(chrt, vals)
 	if err != nil {
+		if missing := missingDependencies(chrt); len(missing) > 0 {
+			return fmt.Errorf("rendering reagent: %w (dependencies not in charts/: %s, run `helm dependency build`)",
+				err, strings.Join(missing, ", "))
+		}
 		return fmt.Errorf("rendering reagent: %w", err)
 	}
 

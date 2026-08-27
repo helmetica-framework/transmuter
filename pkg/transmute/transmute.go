@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"helm.sh/helm/v4/pkg/chart/loader"
@@ -34,18 +35,18 @@ func Transmute(name, fermentURL, primaMateriaURL, primaMateriaVersion string) er
 		return err
 	}
 
-	metada := &chart.Metadata{
-		Name:       name,
-		Type:       "application",
-		APIVersion: "v2",
-		Version:    "0.0.1",
-		Dependencies: []*chart.Dependency{
-			primaMateria,
-		},
+	ferment, err := loadChart(chartDir)
+	if err != nil {
+		return fmt.Errorf("ferment not a valid helm chart: %w", err)
+	}
+
+	metadata, err := reagentMetadata(ferment.Metadata, name, primaMateria)
+	if err != nil {
+		return err
 	}
 
 	slog.Info("transmuting")
-	err = chartutil.CreateFrom(metada, ".", chartDir)
+	err = chartutil.CreateFrom(metadata, ".", chartDir)
 	if err != nil {
 		return err
 	}
@@ -57,23 +58,53 @@ func Transmute(name, fermentURL, primaMateriaURL, primaMateriaVersion string) er
 	}
 
 	slog.Info("assaying reagent")
-	rawChart, err := loader.Load(chartDir)
+	reagent, err := loadChart(name)
 	if err != nil {
-		return err
+		return fmt.Errorf("reagent not a valid helm chart: %w", err)
 	}
 
-	chrt, ok := rawChart.(*chart.Chart)
-	if !ok {
-		return fmt.Errorf("reagent not a valid helm chart")
-	}
-
-	err = chrt.Validate()
+	err = reagent.Validate()
 	if err != nil {
 		return fmt.Errorf("reagent metadata invalid: %w", err)
 	}
 
 	slog.Info("reagent ready")
 	return nil
+}
+
+// reagentMetadata is the ferment's metadata under the reagent's name, with the prima
+// materia added to its dependencies. Everything else the ferment declares carries over,
+// so a library chart it depends on reaches the reagent without the transmuter knowing
+// what it is called. Description and appVersion are the ferment's own and are dropped.
+func reagentMetadata(ferment *chart.Metadata, name string, primaMateria *chart.Dependency) (*chart.Metadata, error) {
+	if ferment == nil {
+		return nil, fmt.Errorf("ferment has no metadata")
+	}
+
+	metadata := *ferment
+	metadata.Name = name
+	metadata.Version = "0.0.1"
+	metadata.Type = "application"
+	metadata.APIVersion = chart.APIVersionV2
+	metadata.Description = ""
+	metadata.AppVersion = ""
+	metadata.Dependencies = append(slices.Clone(ferment.Dependencies), primaMateria)
+
+	return &metadata, nil
+}
+
+func loadChart(path string) (*chart.Chart, error) {
+	raw, err := loader.Load(path)
+	if err != nil {
+		return nil, err
+	}
+
+	chrt, ok := raw.(*chart.Chart)
+	if !ok {
+		return nil, fmt.Errorf("%s is not a v2 chart", path)
+	}
+
+	return chrt, nil
 }
 
 func downloadChart(chartRef string) (string, error) {
