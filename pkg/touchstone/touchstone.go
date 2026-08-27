@@ -16,6 +16,7 @@ import (
 // instead of a %s verb: the test carries awk format strings of its own.
 const namePlaceholder = "TOUCHSTONE_NAME"
 
+// TODO: IMHO ferment should be the source of truth for these files...
 var (
 	// config is the chainsaw Configuration shared by every touchstone of a
 	// reagent. It is only written when the reagent has none yet.

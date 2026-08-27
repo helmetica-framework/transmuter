@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"github.com/helmetica-framework/transmuter/pkg/assay"
+	"github.com/helmetica-framework/transmuter/pkg/mix"
 )
 
 func init() {
@@ -23,5 +26,12 @@ var assayCmd = &cobra.Command{
 }
 
 func runAssay(_ *cobra.Command, _ []string) error {
-	return assay.Assay(viper.GetString("path"), viper.GetString("published-url"))
+	path := viper.GetString("path")
+
+	_, err := mix.LoadChart(path, "default")
+	if err != nil {
+		return fmt.Errorf("cel pre-processing: %w", err)
+	}
+
+	return assay.Assay(path, viper.GetString("published-url"))
 }
