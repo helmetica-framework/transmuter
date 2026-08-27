@@ -18,7 +18,7 @@ import (
 func Transmute(name, fermentURL, primaMateriaURL, primaMateriaVersion string) error {
 	slog.Info("transmutation starting")
 
-	var chartDir string
+	chartDir := fermentURL
 	if strings.HasPrefix(fermentURL, "oci://") {
 		slog.Info("acquiring ferment")
 		downloadedTo, err := downloadChart(fermentURL)
