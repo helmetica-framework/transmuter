@@ -11,7 +11,7 @@ const defaultFermentURL = "oci://ghcr.io/helmetica-framework/ferment"
 
 func init() {
 	transmuteCmd.Flags().String("name", "", "name of the resulting reagent")
-	transmuteCmd.Flags().String("ferment-url", defaultFermentURL, "URL of the ferment to use as scaffold; without a tag the latest available version is used")
+	transmuteCmd.Flags().String("ferment-url", defaultFermentURL, "URL or path of the ferment to use as scaffold. Without a tag the latest available version is used.")
 	transmuteCmd.Flags().String("prima-materia-url", "", "repository URL of the prima materia chart")
 	transmuteCmd.Flags().String("prima-materia-version", "", "version of the prima materia chart")
 
