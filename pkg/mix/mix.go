@@ -28,9 +28,10 @@ type LoadedChart struct {
 	Pvalues map[string]any
 }
 
-// LoadChart loads the reagent chart at path and resolves the CEL expressions
-// in its values against a claim for the given namespace.
-func LoadChart(path, namespace string) (LoadedChart, error) {
+// LoadChartAs loads the reagent chart at path and resolves the CEL expressions
+// in its values against a claim with the given name and namespace. An empty
+// name uses the chart's own, which is what mix and assay want.
+func LoadChartAs(path, name, namespace string) (LoadedChart, error) {
 	rawChart, err := loader.Load(path)
 	if err != nil {
 		return LoadedChart{}, fmt.Errorf("loading chart %s: %w", path, err)
@@ -46,8 +47,12 @@ func LoadChart(path, namespace string) (LoadedChart, error) {
 		return LoadedChart{}, fmt.Errorf("preprocessing values of %s: %w", path, err)
 	}
 
+	if name == "" {
+		name = chrt.Name()
+	}
+
 	pvalues, err := prep.Apply(chrt.Values, celvalues.Claim{
-		Name:      chrt.Name(),
+		Name:      name,
 		Namespace: namespace,
 	})
 
@@ -55,6 +60,11 @@ func LoadChart(path, namespace string) (LoadedChart, error) {
 		Chart:   chrt,
 		Pvalues: pvalues,
 	}, err
+}
+
+// LoadChart is LoadChartAs with the chart's own name as the claim name.
+func LoadChart(path, namespace string) (LoadedChart, error) {
+	return LoadChartAs(path, "", namespace)
 }
 
 // Mix installs chrt with values into namespace. An existing release of the
