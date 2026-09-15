@@ -96,9 +96,17 @@ func set(out map[string]any, path []string, val any) {
 	cur[path[len(path)-1]] = val
 }
 
-// display renders a path for a human. celvalues has its own version that also
-// handles list indices; no expression path runs through a list, so joining is
-// all this one needs.
+// display renders a path for a human: dots between keys, no dot before a list
+// index. No expression path runs through a list, but a value file can hold one.
 func display(path []string) string {
-	return strings.Join(path, ".")
+	var b strings.Builder
+
+	for i, segment := range path {
+		if i > 0 && !strings.HasPrefix(segment, "[") {
+			b.WriteByte('.')
+		}
+		b.WriteString(segment)
+	}
+
+	return b.String()
 }

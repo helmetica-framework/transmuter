@@ -81,3 +81,53 @@ func TestLoadChartKeepsUsingTheChartName(t *testing.T) {
 	assert.Equal(t, "probe", loaded.Pvalues["who"], "mix and assay must be unaffected")
 	assert.Equal(t, "prod", loaded.Pvalues["where"])
 }
+
+const defaultedValues = `extra: chart-only
+service:
+  replicas: 1
+sub:
+  replicas: "cel: values.service.replicas"
+`
+
+func TestLoadChartWithValues(t *testing.T) {
+	tests := []struct {
+		name        string
+		claimValues map[string]any
+		want        any
+	}{
+		{
+			name:        "claim values win over the chart defaults",
+			claimValues: map[string]any{"service": map[string]any{"replicas": int64(3)}},
+			want:        int64(3),
+		},
+		{
+			// A chart default is a float64 here and in the controller: both parse
+			// values.yaml with sigs.k8s.io/yaml, which has no integers.
+			name:        "no claim values leaves the chart defaults",
+			claimValues: map[string]any{},
+			want:        float64(1),
+		},
+		{
+			name:        "nil claim values behaves like an empty map",
+			claimValues: nil,
+			want:        float64(1),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			dir := writeChart(t, map[string]string{
+				"Chart.yaml":  probeChartYaml,
+				"values.yaml": defaultedValues,
+			})
+
+			loaded, err := LoadChartWithValues(dir, "", "prod", tt.claimValues)
+			require.NoError(t, err)
+
+			sub, ok := loaded.Pvalues["sub"].(map[string]any)
+			require.True(t, ok, "the expression result must be written into the values")
+			assert.Equal(t, tt.want, sub["replicas"])
+			assert.NotContains(t, loaded.Pvalues, "extra", "chart defaults stay out of the result, the way they stay out of a HelmRelease")
+		})
+	}
+}

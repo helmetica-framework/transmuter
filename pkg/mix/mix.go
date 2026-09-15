@@ -32,19 +32,9 @@ type LoadedChart struct {
 // in its values against a claim with the given name and namespace. An empty
 // name uses the chart's own, which is what mix and assay want.
 func LoadChartAs(path, name, namespace string) (LoadedChart, error) {
-	rawChart, err := loader.Load(path)
+	chrt, prep, err := load(path)
 	if err != nil {
-		return LoadedChart{}, fmt.Errorf("loading chart %s: %w", path, err)
-	}
-
-	chrt, ok := rawChart.(*chart.Chart)
-	if !ok {
-		return LoadedChart{}, fmt.Errorf("reagent not a valid helm chart")
-	}
-
-	prep, err := celvalues.NewFromChart(chrt)
-	if err != nil {
-		return LoadedChart{}, fmt.Errorf("preprocessing values of %s: %w", path, err)
+		return LoadedChart{}, err
 	}
 
 	if name == "" {
@@ -52,6 +42,51 @@ func LoadChartAs(path, name, namespace string) (LoadedChart, error) {
 	}
 
 	pvalues, err := prep.Apply(chrt.Values, celvalues.Claim{
+		Name:      name,
+		Namespace: namespace,
+	})
+
+	return LoadedChart{
+		Chart:   chrt,
+		Pvalues: pvalues,
+	}, err
+}
+
+func load(path string) (*chart.Chart, *celvalues.Preprocessor, error) {
+	rawChart, err := loader.Load(path)
+	if err != nil {
+		return nil, nil, fmt.Errorf("loading chart %s: %w", path, err)
+	}
+
+	chrt, ok := rawChart.(*chart.Chart)
+	if !ok {
+		return nil, nil, fmt.Errorf("reagent not a valid helm chart")
+	}
+
+	prep, err := celvalues.NewFromChart(chrt)
+	if err != nil {
+		return nil, nil, fmt.Errorf("preprocessing values of %s: %w", path, err)
+	}
+
+	return chrt, prep, nil
+}
+
+// LoadChartWithValues loads the reagent chart at path and resolves its
+// expressions against claimValues, which stand where a claim's spec.values
+// stand in the cluster: merged over the chart defaults for the expressions to
+// read, and carried into Pvalues with the results written on top. The defaults
+// themselves stay out, the way they stay out of a HelmRelease.
+func LoadChartWithValues(path, name, namespace string, claimValues map[string]any) (LoadedChart, error) {
+	chrt, prep, err := load(path)
+	if err != nil {
+		return LoadedChart{}, err
+	}
+
+	if name == "" {
+		name = chrt.Name()
+	}
+
+	pvalues, err := prep.Apply(claimValues, celvalues.Claim{
 		Name:      name,
 		Namespace: namespace,
 	})
