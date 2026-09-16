@@ -17,7 +17,7 @@ import (
 
 // DefaultOutput is where a reagent keeps the values its expressions compute,
 // beside the helm-unittest suites that read them.
-const DefaultOutput = "test/unit/computed-values.yaml"
+const DefaultOutput = "computed-values.yaml"
 
 // header explains the file to whoever opens it and, unlike the hand-written
 // file it replaces, says how to bring it back in line.
