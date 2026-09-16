@@ -4,7 +4,7 @@ go 1.26.5
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
-	github.com/helmetica-framework/chrysopoeia v0.1.0-dev23
+	github.com/helmetica-framework/chrysopoeia v0.1.0-dev9
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
