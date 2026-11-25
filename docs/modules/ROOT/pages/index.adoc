@@ -1,0 +1,11 @@
+= Transmuter
+
+*Transmute*: change from one substance into another.
+
+The transmuter bootstraps a service Helm chart (a reagent) for the Helmetica framework from an upstream chart (the prima materia).
+Once bootstrapped, the service maintainer adjusts the pre-configured libraries to their liking.
+
+It also assays reagents, scaffolds rituals and touchstones, and computes the values a reagent's `cel:` expressions produce.
+The terms are explained in xref:ROOT::concepts.adoc[Concepts].
+
+Start with xref:how-tos/create-reagent.adoc[Create a reagent].

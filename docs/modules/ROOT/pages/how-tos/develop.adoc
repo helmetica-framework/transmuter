@@ -1,0 +1,8 @@
+= Develop the transmuter
+
+[source,bash]
+----
+make build   # generate, fmt, vet and build the binary
+make test    # run the tests
+make docs    # build these docs, fails on warnings
+----

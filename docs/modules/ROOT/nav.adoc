@@ -1,0 +1,18 @@
+* xref:index.adoc[Overview]
+
+.Explanations
+* xref:explanations/architecture.adoc[How a transmutation works]
+
+.How-tos
+* xref:how-tos/install.adoc[Install]
+* xref:how-tos/create-reagent.adoc[Create a reagent]
+* xref:how-tos/assay.adoc[Assay a reagent]
+* xref:how-tos/add-ritual.adoc[Add a ritual]
+* xref:how-tos/add-touchstone.adoc[Add a touchstone]
+* xref:how-tos/computed-values.adoc[Generate computed values]
+* xref:how-tos/publish-reagent.adoc[Publish a reagent]
+* xref:how-tos/develop.adoc[Develop the transmuter]
+
+.References
+* xref:references/configuration.adoc[Configuration]
+* xref:references/libraries.adoc[Go libraries]

@@ -1,0 +1,17 @@
+= Create a reagent
+
+[source,bash]
+----
+go run . transmute \
+  --name test \
+  --prima-materia-url https://charts.appcat.ch/vshnpostgresql \
+  --prima-materia-version 0.8.0
+----
+
+`--ferment-url` is optional and defaults to `oci://ghcr.io/helmetica-framework/ferment`.
+A ferment URL without a tag resolves to the latest available version.
+
+The new reagent comes with a `docs/` skeleton for its end-user documentation.
+Fill it in, then xref:how-tos/publish-reagent.adoc[publish the reagent].
+
+`--path` is optional on every command that takes it and defaults to the current directory, so the other commands are meant to be run from inside the reagent.

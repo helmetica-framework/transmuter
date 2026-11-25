@@ -1,0 +1,17 @@
+= Publish a reagent
+
+A reagent appears on docs.helmetica.io once its repo:
+
+* lives in the `helmetica-framework` GitHub organization, is public and not archived,
+* carries the GitHub topic `helmetica-reagent`,
+* has `docs/antora.yml` on its default branch.
+
+The site rebuilds every hour.
+Its Parameters page is generated from `values.yaml`, so describe each value in a comment there rather than in the docs.
+
+Check the docs locally before pushing:
+
+[source,bash]
+----
+just docs
+----

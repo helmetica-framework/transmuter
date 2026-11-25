@@ -1,0 +1,11 @@
+= Generate computed values
+
+Generate the values a reagent's `cel:` expressions compute:
+
+[source,bash]
+----
+go run . values --name instance
+----
+
+This creates a values file containing computed values for all the cel expressions in the reagent.
+The file can then be used with vanilla helm commands.

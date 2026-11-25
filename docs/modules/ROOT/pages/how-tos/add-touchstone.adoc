@@ -1,0 +1,12 @@
+= Add a touchstone
+
+Add a skeleton touchstone (chainsaw test) to an existing reagent:
+
+[source,bash]
+----
+go run . touchstone add --name install
+----
+
+This writes a chainsaw template test to `test/touchstone/<name>/`.
+The template has various variables pre-defined that help testing reagents.
+Take a look at the template to find out where to add assertions for the test.

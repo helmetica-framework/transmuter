@@ -1,0 +1,10 @@
+= Install
+
+Run it straight from the module:
+
+[source,bash]
+----
+go run github.com/helmetica-framework/transmuter@latest --help
+----
+
+Reagents scaffolded from the ferment pin a transmuter version in their `Justfile`.

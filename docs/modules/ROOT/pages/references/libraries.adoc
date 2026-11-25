@@ -1,0 +1,7 @@
+= Go libraries
+
+* https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/transmute[transmute]: transmute a prima materia into a reagent.
+* https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/assay[assay]: assay a reagent and detect breaking CRD changes.
+* https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/ritual[ritual]: scaffold ritual Definitions into a reagent.
+* https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/touchstone[touchstone]: scaffold chainsaw tests into a reagent.
+* https://pkg.go.dev/github.com/helmetica-framework/transmuter/pkg/values[values]: generate the values a reagent's cel: expressions compute.
