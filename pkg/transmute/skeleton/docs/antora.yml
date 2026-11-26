@@ -1,0 +1,6 @@
+name: {{.Name}}
+title: {{.Title}}
+version: ~
+start_page: ROOT:index.adoc
+nav:
+- modules/ROOT/nav.adoc

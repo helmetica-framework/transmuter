@@ -1,0 +1,10 @@
+= Add a ritual
+
+Add a skeleton ritual to an existing reagent:
+
+[source,bash]
+----
+go run . ritual add --name restart
+----
+
+xref:how-tos/assay.adoc[Assay] validates every ritual `Definition` found in the rendered reagent.

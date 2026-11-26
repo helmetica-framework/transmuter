@@ -1,0 +1,5 @@
+= Configuration
+
+Every flag can also be provided as an environment variable with the `TRANSMUTER_` prefix, for example `TRANSMUTER_FERMENT_URL`.
+
+Run `go run . <command> --help` for the flags of each command.

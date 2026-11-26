@@ -1,0 +1,11 @@
+= Assay a reagent
+
+Validate a reagent and check its CRD for breaking changes against the latest published version:
+
+[source,bash]
+----
+go run . assay \
+  --published-url oci://ghcr.io/helmetica-framework/myreagent
+----
+
+Assay also validates every ritual `Definition` found in the rendered reagent.

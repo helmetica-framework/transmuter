@@ -1,0 +1,12 @@
+= How a transmutation works
+
+The transmuter pulls the ferment (`oci://ghcr.io/helmetica-framework/ferment` by default) and creates the reagent from it with Helm's starter mechanism, which rewrites `<CHARTNAME>` in templates and `values.yaml`.
+
+The reagent's `Chart.yaml` is the ferment's, under the reagent's name and with the prima materia added to its dependencies.
+Whatever else the ferment declares, the azoth version it pins included, carries over, so the ferment stays the one place a reagent's metadata is decided.
+The reagent needs `helm dependency build` before it renders, which `just test`, `just build` and the touchstone all do.
+
+The transmuter also writes what a starter chart cannot carry, because Helm strips dotfiles and anything packaged ends up in every reagent:
+
+* `.gitignore`
+* the `docs/` skeleton, which docs.helmetica.io renders, with `docs/` added to `.helmignore`

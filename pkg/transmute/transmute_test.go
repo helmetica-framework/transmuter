@@ -243,6 +243,8 @@ func Test_Transmute(t *testing.T) {
 	gitignore, err := os.ReadFile(filepath.Join("myreagent", ".gitignore"))
 	require.NoError(t, err)
 	assert.Contains(t, string(gitignore), "charts/")
+
+	assert.FileExists(t, filepath.Join("myreagent", "docs", "antora.yml"), "every new reagent starts with docs")
 }
 
 // writeFerment writes a starter chart shaped like the real ferment: a library chart it

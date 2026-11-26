@@ -57,6 +57,11 @@ func Transmute(name, fermentURL, primaMateriaURL, primaMateriaVersion string) er
 		return err
 	}
 
+	// nor a docs/ tree: it would be packaged into every reagent
+	if err := writeDocsSkeleton(name, name); err != nil {
+		return err
+	}
+
 	slog.Info("assaying reagent")
 	reagent, err := loadChart(name)
 	if err != nil {
