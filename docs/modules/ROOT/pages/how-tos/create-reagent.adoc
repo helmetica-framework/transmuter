@@ -1,12 +1,21 @@
 = Create a reagent
 
+Check the upstream chart against the xref:references/prima-materia-checklist.adoc[prima materia checklist] first.
+For a guided walk through the whole cycle, see xref:tutorials/first-reagent.adoc[Your first reagent].
+
 [source,bash]
 ----
-go run . transmute \
-  --name test \
-  --prima-materia-url https://charts.appcat.ch/vshnpostgresql \
-  --prima-materia-version 0.8.0
+transmuter transmute \
+  --name my-service \ <1>
+  --prima-materia-url oci://... \ <2>
+  --prima-materia-version x.y.z <3>
 ----
+<1> The name of the new reagent. The command creates a folder with this name.
+<2> URL of the upstream chart. OCI and classic Helm repositories such as `https://charts.appcat.ch/vshnpostgresql` both work.
+<3> Version of the upstream chart. There is no floating tag, so an exact version is required.
+
+The upstream chart is added as a dependency with the alias `service` in `Chart.yaml`.
+The new reagent ships a pre-seeded `values.yaml` that wires up the framework's operators, see xref:ferment::explanations/values.adoc[The reagent's values.yaml].
 
 `--ferment-url` is optional and defaults to `oci://ghcr.io/helmetica-framework/ferment`.
 A ferment URL without a tag resolves to the latest available version.

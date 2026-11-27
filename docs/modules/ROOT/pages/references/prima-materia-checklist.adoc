@@ -1,0 +1,35 @@
+= Prima materia checklist
+
+A reagent is only as good as the upstream chart it wraps, the xref:ROOT::concepts.adoc#prima-materia[prima materia].
+Check a chart against this list before you xref:how-tos/create-reagent.adoc[create a reagent] from it.
+
+== Must
+
+All these points are required to ensure optimal compatibility.
+
+* [ ] available via OCI repository
+* [ ] compatible with FluxCD
+** [ ] test by offering the chart as it is, see xref:tutorials/first-reagent.adoc#_offer_an_upstream_chart_as_it_is[Your first reagent]
+* [ ] provides image and registry configurations
+* [ ] annotations and labels can be passed through to pods and PVCs
+* [ ] resource requests and limits are configurable
+* [ ] no cluster-scoped resources, or they allow multiple instances (for example by prefixing them), or they can be disabled
+* [ ] minor upgrades need no manual steps
+
+== Should
+
+These are nice to have for a better maintainer experience.
+
+* [ ] maps instead of lists in values
+* [ ] low values nesting
+* [ ] fullnameOverride for predictable resource names
+* [ ] options to disable included ingress/gatewayAPI configs
+* [ ] values are documented with comments
+* [ ] few empty values without a type (`null`, `{}`, `[]`)
+* [ ] supports existing secrets for credentials
+* [ ] provides a metrics endpoint or ServiceMonitor
+* [ ] runs as non-root with configurable securityContext
+* [ ] chart is signed (cosign)
+* [ ] upgrade jobs like migrations use Helm hooks
+* [ ] follows semver, breaking value changes only in major versions
+* [ ] updates don't break existing instances (deployment: maxUnavailable: 0, pre-install hook to test image pull....)

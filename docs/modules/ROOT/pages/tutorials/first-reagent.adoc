@@ -1,0 +1,179 @@
+= Your first reagent
+
+This tutorial offers a Redis chart as a service twice: first the upstream chart as it is, then wrapped into a reagent.
+It takes about half an hour, most of it waiting for clusters and instances to come up.
+The terms are explained in xref:ROOT::concepts.adoc[Concepts].
+
+== Prepare the development environment
+
+Start xref:athanor::index.adoc[athanor] and ignite the furnace, see xref:athanor::tutorials/getting-started.adoc[Getting started with the devcontainer].
+The devcontainer already has `transmuter`, `helm`, `kubectl` and `just` installed.
+All commands below run inside it.
+
+Chrysopoeia only watches ``ClaimDefinition``s in its own namespace, `syn-helmetica-framework` on athanor.
+
+== Offer an upstream chart as it is
+
+An existing chart is called a xref:ROOT::concepts.adoc#prima-materia[prima materia].
+To make it orderable, the framework needs three manifests:
+
+* an `OCIRepository`, where FluxCD pulls the chart from,
+* an `ImageRepository`, where chrysopoeia looks for new versions,
+* a `ClaimDefinition`, which ties both together. Its name becomes the API group of the generated CRD.
+
+[source,bash]
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: redis-ha-v4
+  namespace: syn-helmetica-framework
+spec:
+  interval: 12h
+  provider: generic
+  ref:
+    semver: "4.x"
+  timeout: 60s
+  url: oci://ghcr.io/helmetica-framework/redis-ha
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: redis-ha
+  namespace: syn-helmetica-framework
+spec:
+  exclusionList:
+  - ^.*\.sig$
+  - ^sha256-.+$
+  image: ghcr.io/helmetica-framework/redis-ha
+  interval: 12h
+  provider: generic
+---
+apiVersion: chrysopoeia.helmetica.io/v1
+kind: ClaimDefinition
+metadata:
+  name: v4.redis
+  namespace: syn-helmetica-framework
+spec:
+  crdNames:
+    kind: Redis
+    plural: redis
+  reference:
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: OCIRepository
+    name: redis-ha-v4
+  versionDiscovery:
+    reference:
+      apiVersion: image.toolkit.fluxcd.io/v1
+      kind: ImageRepository
+      name: redis-ha
+EOF
+kubectl -n syn-helmetica-framework wait --for condition=Ready claimdefinition/v4.redis --timeout 120s
+----
+
+Chrysopoeia generated the CRD `redis.v4.redis.helmetica-bundles.io` from the chart's `values.yaml`.
+Order an instance from it:
+
+[source,bash]
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: v4.redis.helmetica-bundles.io/bundle
+kind: Redis
+metadata:
+  name: redis
+  namespace: default
+spec:
+  approval:
+    strategy: Automatic
+  values:
+    replicas: 1
+EOF
+kubectl get redis -w
+----
+
+After a few minutes the instance is ready.
+It runs in an instance namespace of its own:
+
+[source,bash]
+----
+kubectl get redis redis -o jsonpath='{.status.instanceNamespace}{"\n"}'
+----
+
+== Wrap the chart into a reagent
+
+Offering a chart as it is gets something going quickly.
+A reagent adds what a managed service needs on day 2: rituals such as restart and maintenance, backups, network policies, credentials and billing.
+They come from xref:ferment::index.adoc[ferment], the starter chart every reagent is created from.
+
+Before you wrap a chart of your own, check it against the xref:references/prima-materia-checklist.adoc[prima materia checklist].
+
+Create the reagent next to the other charts:
+
+[source,bash]
+----
+cd /workspaces/athanor/reagents
+transmuter transmute \
+  --name myredis \
+  --prima-materia-url oci://ghcr.io/helmetica-framework/redis-ha \
+  --prima-materia-version 4.39.1
+cd myredis
+----
+
+This creates the chart `myredis/`.
+The upstream chart is a dependency with the alias `service`, see `Chart.yaml`.
+That's why its values are nested under the `service` key in the reagent's `values.yaml`, while the upstream chart itself expects them at the top level.
+
+Set the default replica count for every instance:
+
+[source,yaml]
+----
+service:
+  replicas: 1
+----
+
+What else goes into `values.yaml` is described in xref:ferment::explanations/values.adoc[The reagent's values.yaml].
+
+Publish the reagent into athanor's registry and order an instance of it:
+
+[source,bash]
+----
+just infuse
+----
+
+`infuse` packages the chart, pushes it to the registry inside athanor, applies the three manifests from above for it and creates a claim named `myredis` with the chart's default values.
+It waits until the instance is ready and prints its instance namespace.
+
+The claim sets no values, so the instance runs with the reagent's defaults, a single replica:
+
+[source,bash]
+----
+kubectl -n "$(kubectl get myredis myredis -o jsonpath='{.status.instanceNamespace}')" get statefulset
+----
+
+== Clean up
+
+Remove the reagent, its instance and its generated CRD:
+
+[source,bash]
+----
+just decant
+----
+
+Remove the upstream chart's instance first, its instance namespace goes away with it.
+Deleting a `ClaimDefinition` leaves the generated CRD in place, so delete that explicitly:
+
+[source,bash]
+----
+kubectl delete redis redis
+kubectl -n syn-helmetica-framework delete claimdefinition v4.redis
+kubectl -n syn-helmetica-framework delete ocirepository.source.toolkit.fluxcd.io redis-ha-v4
+kubectl -n syn-helmetica-framework delete imagerepository.image.toolkit.fluxcd.io redis-ha
+kubectl delete crd redis.v4.redis.helmetica-bundles.io
+----
+
+== Next steps
+
+* xref:how-tos/add-ritual.adoc[Add a ritual]
+* xref:how-tos/add-touchstone.adoc[Add a touchstone]
+* xref:how-tos/assay.adoc[Assay the reagent] before you xref:how-tos/publish-reagent.adoc[publish it]
