@@ -27,11 +27,11 @@ build: generate fmt vet $(BIN_FILENAME) ## Build the transmuter binary
 
 .PHONY: docs
 docs: ## Build the docs as they appear on docs.helmetica.io; fails on warnings
-	GOTOOLCHAIN=auto GOEXPERIMENT=jsonv2 go run github.com/helmetica-framework/rosarium@latest preview .
+	GOPROXY=direct GOTOOLCHAIN=auto GOEXPERIMENT=jsonv2 go run github.com/helmetica-framework/rosarium@main preview .
 
 .PHONY: docs-serve
 docs-serve: ## Build the docs and serve them on http://localhost:2020
-	GOTOOLCHAIN=auto GOEXPERIMENT=jsonv2 go run github.com/helmetica-framework/rosarium@latest preview . --serve :2020
+	GOPROXY=direct GOTOOLCHAIN=auto GOEXPERIMENT=jsonv2 go run github.com/helmetica-framework/rosarium@main preview . --serve :2020
 
 .PHONY: generate
 generate: ## Run code generators
