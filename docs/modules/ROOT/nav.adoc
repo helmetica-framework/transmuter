@@ -1,5 +1,8 @@
 * xref:index.adoc[Overview]
 
+.Tutorials
+* xref:tutorials/first-reagent.adoc[Your first reagent]
+
 .Explanations
 * xref:explanations/architecture.adoc[How a transmutation works]
 
@@ -15,4 +18,5 @@
 
 .References
 * xref:references/configuration.adoc[Configuration]
+* xref:references/prima-materia-checklist.adoc[Prima materia checklist]
 * xref:references/libraries.adoc[Go libraries]
